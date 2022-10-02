@@ -11,7 +11,7 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "ts-node-dev --respawn --transpile-only --exit-child --log-error -- ./src/index.ts"
+    "start": "ts-node --respawn --transpile-only --exit-child --log-error -- ./src/index.ts"
   },
   "repository": {
     "type": "git",
