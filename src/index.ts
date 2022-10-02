@@ -3,7 +3,7 @@ import express from 'express'
 const app = express();
 
 app.get('/', (req, res) => {
-    res.send('Bernard Muller portal.')
+    res.send('Testing github actions CI/CD')
 })
 
 let port = process.env.PORT || '8080';
