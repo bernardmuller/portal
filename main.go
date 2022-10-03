@@ -1,25 +1,31 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "net/http"
+	"net/http"
+	"os"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func main() {
-    http.HandleFunc("/", handler)
-    log.Fatal(http.ListenAndServe("localhost:8000", nil))
-}
 
-func handler(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintf(w, "%s %s %s \n", r.Method, r.URL, r.Proto)
-    //Iterate over all header fields
-    for k, v := range r.Header {
-        fmt.Fprintf(w, "Header field %q, Value %q\n", k, v)
-    }
+	e := echo.New()
 
-    fmt.Fprintf(w, "Host = %q\n", r.Host)
-    fmt.Fprintf(w, "RemoteAddr= %q\n", r.RemoteAddr)
-    //Get value for a specified token
-    fmt.Fprintf(w, "\n\nFinding value of \"Accept\" %q", r.Header["Accept"])
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	e.GET("/", func(c echo.Context) error {
+		return c.HTML(http.StatusOK, "Hello, Docker! <3")
+	})
+
+	e.GET("/ping", func(c echo.Context) error {
+		return c.JSON(http.StatusOK, struct{ Status string }{Status: "OK"})
+	})
+
+	httpPort := os.Getenv("HTTP_PORT")
+	if httpPort == "" {
+		httpPort = "8080"
+	}
+
+	e.Logger.Fatal(e.Start(":" + httpPort))
 }
