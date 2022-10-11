@@ -1,15 +1,14 @@
-FROM golang:1.16-alpine
+FROM node:lts
 
 WORKDIR /app
 
-COPY go.mod ./
-COPY go.sum ./
-RUN go mod download
+COPY package.json .
+COPY tsconfig.json ./
 
-COPY *.go ./
+RUN npm install
 
-RUN go build -o /docker-gs-ping
+COPY . .
 
 EXPOSE 8080
 
-CMD [ "/docker-gs-ping" ]
+CMD npm start
