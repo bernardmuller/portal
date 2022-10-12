@@ -5,7 +5,11 @@ var apiProxy = httpProxy.createProxyServer();
 var serverOne = "https://munchiesbackend-production.up.railway.app/";
 
 app.all("/munchies/*", function (req, res) {
-	apiProxy.web(req, res, { target: serverOne });
+	try {
+		apiProxy.web(req, res, { target: serverOne });
+	} catch (error) {
+		console.log(error);
+	}
 });
 
 const port = 8080;
