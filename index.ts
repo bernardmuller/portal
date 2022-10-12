@@ -4,6 +4,10 @@ const app = express();
 var apiProxy = httpProxy.createProxyServer();
 var serverOne = "https://munchiesbackend-production.up.railway.app/";
 
+app.get("/", function (req, res) {
+	res.send("bernardmuller.dev api portal");
+});
+
 app.all("/munchies/*", function (req, res) {
 	console.log("munchies");
 	try {
