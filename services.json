@@ -1,0 +1,8 @@
+[
+	{
+		"name": "munchies",
+		"developmentUrl": "http://localhost:5000/api",
+		"productionUrl": "https://munchiesbackend-production.up.railway.app/api",
+		"queryParam": "/munchies"
+	}
+]
