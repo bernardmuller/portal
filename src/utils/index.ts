@@ -11,3 +11,5 @@ export function requireEnvVar(key: string) {
 export function checkEnvironmentIsProduction() {
 	return requireEnvVar("NODE_ENV") === "production";
 }
+
+export function getUuid() {}

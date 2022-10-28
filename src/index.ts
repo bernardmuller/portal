@@ -1,3 +1,3 @@
-import createApp from "./http";
+import createApp from "./server";
 
 createApp();
