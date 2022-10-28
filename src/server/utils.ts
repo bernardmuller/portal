@@ -1,8 +1,9 @@
-import { Application } from "express";
+import { Application, NextFunction, Request, Response, Router } from "express";
 import { checkEnvironmentIsProduction } from "../utils";
 import httpProxy from "express-http-proxy";
 import { TService } from "../interfaces/services";
 import { PORT } from "../config";
+import { configureRedisDb } from "../db";
 
 export const portCB = () => {
 	console.log("Server is runnning on port " + PORT);
@@ -15,10 +16,19 @@ export function buildProxyUrl(service: TService) {
 	return url;
 }
 
-export function createEndpoint(app: Application, service: TService) {
+export function createProxyEndpoint(app: Application, service: TService) {
 	app.use(service.queryParam.toString(), httpProxy(buildProxyUrl(service)));
 }
 
 export function createProxyEndpoints(app: Application, services: TService[]) {
-	services.forEach((service) => createEndpoint(app, service));
+	services.forEach((service) => createProxyEndpoint(app, service));
 }
+
+export const dbMiddleware = (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	configureRedisDb(req, res);
+	next();
+};

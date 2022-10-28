@@ -1,10 +1,11 @@
 import { PORT } from "../config";
 import express from "express";
 import { initializeServices } from "../services";
-import { createProxyEndpoints, portCB } from "./utils";
-import { connectToDatabase, createUser, getUsers } from "../db";
+import { createProxyEndpoints, dbMiddleware, portCB } from "./utils";
+import { connectToDatabase } from "../db";
 import helmet from "helmet";
 import bodyParser from "body-parser";
+import { router } from "./routes";
 
 function createApp() {
 	const app = express();
@@ -14,13 +15,7 @@ function createApp() {
 	app.use(bodyParser.json());
 
 	// todo extract app route into generator
-	app.get("/", function (req, res) {
-		res.send("bernardmuller.dev api portal");
-	});
-
-	app.get("/users", getUsers);
-	app.post("/users", createUser);
-
+	app.use("/", router);
 	createProxyEndpoints(app, initializeServices());
 
 	app.listen(PORT, () => {
