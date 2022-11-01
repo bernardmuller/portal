@@ -1,6 +1,7 @@
 import { Entity, Schema, Client } from "redis-om";
 
 class User extends Entity {}
+
 export const userSchema = new Schema(
 	User,
 	{

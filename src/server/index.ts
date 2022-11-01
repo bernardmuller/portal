@@ -15,6 +15,7 @@ function createApp() {
 	app.use(bodyParser.json());
 
 	// todo extract app route into generator
+
 	app.use("/", router);
 	createProxyEndpoints(app, initializeServices());
 

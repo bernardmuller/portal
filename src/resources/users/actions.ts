@@ -34,41 +34,27 @@ export const getUser = async (id: string) => {
 	return user;
 };
 
-export const updateUser = async (
-	id: string,
-	data: {
-		firstName?: string;
-		lastName?: string;
-		dateOfBirth?: Date;
-		householdId?: string | null;
-	}
-) => {
-	const user = await getUsers();
-	if (!user) {
-		throw new Error("User not found");
-	}
+// function throws error on request
+export const updateUser = async (id: string, data: any) => {
+	const userRepository = client.fetchRepository(userSchema);
+	const existingUser = await userRepository.fetch(id);
+	const updatedUser = { ...existingUser, ...data };
+	console.log(updatedUser);
 
-	const updatedUserData = await db.user.update({
-		where: { id },
-		data,
-	});
-
-	const updatedUser = UserModel.parse(updatedUserData);
+	await userRepository.save(updatedUser);
 	return updatedUser;
 };
 
 export const deleteUser = async (id: string) => {
-	const user = await getUsers();
-	if (!user) throw new Error("User not found");
-
-	await db.user.delete({
-		where: {
-			id,
-		},
-	});
-	return { message: "User deleted successfully" };
-};
-
-export const deleteAllUsers = async () => {
-	await db.user.deleteMany();
+	try {
+		const userRepository = client.fetchRepository(userSchema);
+		await userRepository.remove(id);
+		return { Ok: true, status: 200, message: "User deleted" };
+	} catch (error) {
+		return {
+			Ok: false,
+			status: 500,
+			message: `Error while deleting user: ${error}`,
+		};
+	}
 };

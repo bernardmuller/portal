@@ -13,3 +13,11 @@ export function checkEnvironmentIsProduction() {
 }
 
 export function getUuid() {}
+
+export const validateUserParams = (params: any) => {
+	for (const item in params) {
+		if (params[item] === undefined) {
+			throw new Error(`Missing ${item} parameter`);
+		}
+	}
+};

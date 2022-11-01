@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
 import { get } from "http";
-import { createUserHandler, getUserHandler, getUsersHandler } from "./handlers";
+import {
+	createUserHandler,
+	deleteUserHandler,
+	getUserHandler,
+	getUsersHandler,
+	updateUserServiceHandler,
+} from "./handlers";
 
 const endpoints = [
 	{
@@ -20,6 +26,18 @@ const endpoints = [
 		path: "/users",
 		handler: createUserHandler,
 		authenticate: true,
+	},
+	{
+		method: "put",
+		path: "/users/:id",
+		handler: updateUserServiceHandler,
+		authenticate: true,
+	},
+	{
+		method: "delete",
+		path: "/users/:id",
+		handler: deleteUserHandler,
+		authenticate: false,
 	},
 ];
 
