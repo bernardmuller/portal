@@ -2,16 +2,16 @@ import { NextFunction, Request, Response } from "express";
 import { Client, Entity, Schema, Repository } from "redis-om";
 import { requireEnvVar } from "../utils";
 
-class User extends Entity {}
+class User extends Entity {
+}
 export const userSchema = new Schema(
 	User,
 	{
-		id: { type: "string" },
 		email: { type: "string" },
 		password: { type: "string" },
-		service: { type: "string" },
-	},
-	{ dataStructure: "JSON" }
+		service: {type: "string"}
+	}
+	
 );
 
 export const client = new Client();

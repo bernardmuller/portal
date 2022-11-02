@@ -1,0 +1,7 @@
+[ ] Write a proper error handler
+[ ] Replace all res.send() instances with error handler
+[ ] Register
+[ ] Login
+[ ] JWT
+[ ] bcrypt password hashing
+[ ] forgot password

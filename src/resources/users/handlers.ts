@@ -1,6 +1,8 @@
+import { client } from "../../db";
 import { Request, Response } from "express";
 import { validateUserParams } from "../../utils";
 import {
+	checkIfUserExists,
 	createUser,
 	deleteUser,
 	getUser,
@@ -16,6 +18,15 @@ export const getUsersHandler = async (req: Request, res: Response) => {
 
 export const getUserHandler = async (req: Request, res: Response) => {
 	const { id } = req.params;
+	const existingUser = await checkIfUserExists(id)
+	if(!existingUser) {
+		res.send({
+			Ok: true,
+			status: 200,
+			message: 'User not found'
+		});
+		return
+	}
 	const user = await getUser(id);
 	res.send(user);
 };
@@ -26,25 +37,22 @@ export const createUserHandler = async (req: Request, res: Response) => {
 		password: req.body.password,
 	};
 	const existingUser = await getUserByEmail(req.body.email);
-	if (existingUser.length < 1) {
-		const newUser = await createUser(userParams);
+	if (existingUser.length > 0) {
+		throw new Error('User Already exists')
+	}
+	
+	const newUser = await createUser(userParams);
 		res.send({
 			Ok: true,
 			status: 200,
 			data: newUser,
 		});
 		return;
-	}
-	res.send({
-		Ok: false,
-		status: 401,
-		message: `User ${req.body.email} already exists`,
-	});
 };
 
 export const updateUserServiceHandler = async (req: Request, res: Response) => {
 	const { id } = req.params;
-	const existingUser = await getUser(id);
+	const existingUser = await checkIfUserExists(id)
 
 	if (!existingUser)
 		res.send({
@@ -69,15 +77,17 @@ export const updateUserServiceHandler = async (req: Request, res: Response) => {
 
 export const deleteUserHandler = async (req: Request, res: Response) => {
 	const { id } = req.params;
-	const existingUser = await getUser(id);
+	const existingUser = await checkIfUserExists(id)
 
-	if (existingUser)
+	if (!existingUser) {
 		res.send({
 			Ok: false,
 			status: 401,
 			message: `User not found.`,
-		});
+		})
+		return;
+	}
 
-	const deletedUser = deleteUser(existingUser.entityId);
-	res.send(deletedUser);
+	const deletedUser = await deleteUser(id);
+	res.send(deletedUser)
 };

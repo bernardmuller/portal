@@ -1,4 +1,4 @@
-import { TService, TServices } from "../interfaces/services";
+import { TService, TServices } from "../interfaces";
 import servicesData from "../../services.json";
 
 export const services: TServices = servicesData;

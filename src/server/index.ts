@@ -6,6 +6,7 @@ import { connectToDatabase } from "../db";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 import { router } from "./routes";
+import { errorHandler } from "./errors";
 
 function createApp() {
 	const app = express();
@@ -18,6 +19,8 @@ function createApp() {
 
 	app.use("/", router);
 	createProxyEndpoints(app, initializeServices());
+
+	app.use(errorHandler);
 
 	app.listen(PORT, () => {
 		portCB();

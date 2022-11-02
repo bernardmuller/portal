@@ -1,7 +1,7 @@
 import { Application, NextFunction, Request, Response, Router } from "express";
 import { checkEnvironmentIsProduction } from "../utils";
 import httpProxy from "express-http-proxy";
-import { TService } from "../interfaces/services";
+import { TService } from "../interfaces";
 import { PORT } from "../config";
 import { configureRedisDb } from "../db";
 
