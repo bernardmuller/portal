@@ -53,3 +53,8 @@ export const checkIfUserExists = async (id: string): Promise<boolean> => {
 	const exists = await client.execute(['EXISTS', `User:${id}`])
 	return exists as boolean
 }
+
+export const checkIfUserExistsByEmail = async (email: string): Promise<boolean> => {
+	const user = await getUserByEmail(email)
+	return user[0] ? true : false; 
+}

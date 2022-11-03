@@ -1,4 +1,4 @@
-[ ] Write a proper error handler
+[x] Write a proper error handler
 [ ] Replace all res.send() instances with error handler
 [ ] Register
 [ ] Login
