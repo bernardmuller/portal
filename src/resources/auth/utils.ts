@@ -11,7 +11,7 @@ export const encryptPassword = async (password: string) => {
   return passwordHash;
 };
 
-export const camparePassword = async (
+export const camparePasswords = async (
   password: string,
   userPassword: string,
 ) => {

@@ -1,6 +1,7 @@
 import { client, userSchema } from '../../db';
 
 export const createUser = async (data: {
+  id: string;
   email: string;
   firstName?: string;
   password: string;
@@ -18,7 +19,7 @@ export const getUserByEmail = async (email: string) => {
     .where('email')
     .equals(email)
     .return.all();
-  return user;
+  return user[0]?.toRedisJson();
 };
 
 export const getUsers = async () => {
@@ -58,5 +59,5 @@ export const checkIfUserExistsByEmail = async (
   email: string,
 ): Promise<boolean> => {
   const user = await getUserByEmail(email);
-  return user[0] ? true : false;
+  return user ? true : false;
 };

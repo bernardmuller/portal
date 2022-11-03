@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 dotenv.config();
+import { v4 as uuidv4 } from 'uuid';
 
 export function requireEnvVar(key: string) {
   const variable = process.env[key];
@@ -12,7 +13,9 @@ export function checkEnvironmentIsProduction() {
   return requireEnvVar('NODE_ENV') === 'production';
 }
 
-export function getUuid() {}
+export function getUuid() {
+  return uuidv4();
+}
 
 export const validateUserParams = (params: any) => {
   for (const item in params) {
