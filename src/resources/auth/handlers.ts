@@ -6,7 +6,7 @@ import {
   updateUser,
   updateUserPassword,
 } from '../../resources/users/actions';
-import { login, register } from './actions';
+import { forgotPassword, login, register, resetPassword } from './actions';
 import {
   createForgotPasswordToken,
   decodeJWTToken,
@@ -29,21 +29,14 @@ export const loginHandler = async (req: Request, res: Response) => {
 
 export const forgotPasswordHandler = async (req: Request, res: Response) => {
   const { email } = req.body;
-  const user = await getUserByEmail(email);
-  const parsedUser = UserModel.parse(user);
-  const token = await createForgotPasswordToken(parsedUser);
+  const token = await forgotPassword(email);
   res.send({ resetToken: token });
 };
 
 export const resetPasswordHandler = async (req: Request, res: Response) => {
   const { token } = req.query;
-  const decodedToken = await decodeJWTToken(token as string).catch((err) => {
-    throw new Error(err);
-  });
   const { password } = req.body;
-  if (!password) throw new Error('No password Provided');
-  const newHash = await encryptPassword(password);
-  const user = await getUserByUuid(decodedToken.user.id);
-  const updatedUser = await updateUserPassword(user?.entityId, newHash);
+  if (!token) throw new Error('No resetpassword token provided.');
+  const updatedUser = await resetPassword(token as string, password);
   res.send(updatedUser);
 };
