@@ -4,6 +4,7 @@ import { requireEnvVar } from '../utils';
 
 class User extends Entity {}
 export const userSchema = new Schema(User, {
+  id: { type: 'string' },
   email: { type: 'string' },
   password: { type: 'string' },
   service: { type: 'string' },

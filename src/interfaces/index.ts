@@ -21,6 +21,4 @@ export interface TService extends z.infer<typeof ServiceModel> {}
 
 export type TServices = z.infer<typeof ServiceModel>[];
 
-export interface User extends z.infer<typeof UserModel> {
-  Service: EService[];
-}
+export interface User extends z.infer<typeof UserModel> {}

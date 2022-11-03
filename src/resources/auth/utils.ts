@@ -2,6 +2,7 @@ import { compare, hash, genSalt } from 'bcryptjs';
 import { requireEnvVar } from '../../utils';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { getUser } from '../../resources/users/actions';
+import { User } from '../../interfaces';
 
 const SALT_ROUNDS = requireEnvVar('SALT_ROUNDS');
 
@@ -51,4 +52,10 @@ export const tradeTokenForUser = async (authToken: string) => {
   const user = await getUser(decoded.userId);
   if (!user) throw new Error('User not found');
   return decoded?.userId;
+};
+
+export const createForgotPasswordToken = async (user: User) => {
+  return jwt.sign({ user, reset: true }, requireEnvVar('JWT_SECRET'), {
+    expiresIn: '5min',
+  });
 };

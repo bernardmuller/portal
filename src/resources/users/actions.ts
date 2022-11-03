@@ -19,6 +19,8 @@ export const getUserByEmail = async (email: string) => {
     .where('email')
     .equals(email)
     .return.all();
+  if (!user[0]?.toRedisJson())
+    throw new Error(`No user with email: "${email}" found.`);
   return user[0]?.toRedisJson();
 };
 
@@ -32,6 +34,18 @@ export const getUser = async (id: string) => {
   const userRepository = client.fetchRepository(userSchema);
   const user = await userRepository.fetch(id);
   return user.toRedisJson();
+};
+
+export const getUserByUuid = async (uuid: string) => {
+  const userRepository = client.fetchRepository(userSchema);
+  const user = await userRepository
+    .search()
+    .where('id')
+    .equals(uuid)
+    .return.all();
+  console.log(user);
+  if (!user[0]?.toRedisJson()) throw new Error(`No user found.`);
+  return user[0];
 };
 
 // function throws error on request
@@ -60,4 +74,13 @@ export const checkIfUserExistsByEmail = async (
 ): Promise<boolean> => {
   const user = await getUserByEmail(email);
   return user ? true : false;
+};
+
+export const updateUserPassword = async (id: string, newPassword: string) => {
+  const userRepository = client.fetchRepository(userSchema);
+  const user = await userRepository.fetch(id);
+  // @ts-ignore
+  user.password = newPassword;
+  await userRepository.save(user);
+  return user.toRedisJson();
 };
