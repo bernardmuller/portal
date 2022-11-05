@@ -1,13 +1,16 @@
 import { Entity, Schema, Client } from 'redis-om';
 
-class User extends Entity {}
+export class User extends Entity {}
 
 export const userSchema = new Schema(
   User,
   {
+    id: { type: 'string' },
+    firstname: { type: 'string' },
+    lastname: { type: 'string' },
     email: { type: 'string' },
     password: { type: 'string' },
-    service: { type: 'string' },
+    services: { type: 'string[]' },
   },
   { dataStructure: 'JSON' },
 );

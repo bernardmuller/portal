@@ -1,10 +1,11 @@
-import { Request, Response } from 'express';
-import { get } from 'http';
 import {
+  addServiceToUserHandler,
   createUserHandler,
+  deleteAllServicesfromUserHandler,
   deleteUserHandler,
   getUserHandler,
   getUsersHandler,
+  removeServicefromUserHandler,
   updateUserServiceHandler,
 } from './handlers';
 
@@ -37,7 +38,25 @@ const endpoints = [
     method: 'delete',
     path: '/users/:id',
     handler: deleteUserHandler,
-    authenticate: false,
+    authenticate: true,
+  },
+  {
+    method: 'put',
+    path: '/users/:id/add-service',
+    handler: addServiceToUserHandler,
+    authenticate: true,
+  },
+  {
+    method: 'put',
+    path: '/users/:id/remove-service',
+    handler: removeServicefromUserHandler,
+    authenticate: true,
+  },
+  {
+    method: 'delete',
+    path: '/users/:id/services',
+    handler: deleteAllServicesfromUserHandler,
+    authenticate: true,
   },
 ];
 

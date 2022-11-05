@@ -6,8 +6,11 @@ enum EService {
 
 export const UserModel = z.object({
   id: z.string(),
+  firstname: z.string(),
+  lastname: z.string(),
   email: z.string().email(),
   password: z.string(),
+  services: z.string().array(),
 });
 
 export const ServiceModel = z.object({

@@ -1,19 +1,18 @@
-import { client, userSchema } from '../../db';
+import { client } from '../../db';
+import { fetchUserRepository } from '../../db/utils';
 
 export const createUser = async (data: {
   id: string;
   email: string;
-  firstName?: string;
   password: string;
-  services?: string[];
 }) => {
-  const userRepository = client.fetchRepository(userSchema);
+  const userRepository = fetchUserRepository();
   const newUser = await userRepository.createAndSave(data);
   return newUser;
 };
 
 export const getUserByEmail = async (email: string) => {
-  const userRepository = client.fetchRepository(userSchema);
+  const userRepository = fetchUserRepository();
   const user = await userRepository
     .search()
     .where('email')
@@ -25,19 +24,19 @@ export const getUserByEmail = async (email: string) => {
 };
 
 export const getUsers = async () => {
-  const userRepository = client.fetchRepository(userSchema);
+  const userRepository = fetchUserRepository();
   const users = await userRepository.search().return.all();
   return users;
 };
 
 export const getUser = async (id: string) => {
-  const userRepository = client.fetchRepository(userSchema);
+  const userRepository = fetchUserRepository();
   const user = await userRepository.fetch(id);
   return user.toRedisJson();
 };
 
 export const getUserByUuid = async (uuid: string) => {
-  const userRepository = client.fetchRepository(userSchema);
+  const userRepository = fetchUserRepository();
   const user = await userRepository
     .search()
     .where('id')
@@ -47,7 +46,6 @@ export const getUserByUuid = async (uuid: string) => {
   return user[0].toRedisJson();
 };
 
-// function throws error on request
 export const updateUser = async (
   id: string,
   data: {
@@ -55,26 +53,75 @@ export const updateUser = async (
     lastname: string;
   },
 ) => {
-  const userRepository = client.fetchRepository(userSchema);
+  const userRepository = fetchUserRepository();
   const user = await userRepository.fetch(id);
   // @ts-ignore
   user.firstname = data.firstname;
+  // @ts-ignore
   user.lastname = data.lastname;
   await userRepository.save(user);
   return user.toRedisJson();
 };
 
 export const updateUserService = async (id: string, service: string) => {
-  const userRepository = client.fetchRepository(userSchema);
+  const userRepository = fetchUserRepository();
   const user = await userRepository.fetch(id);
   // @ts-ignore
-  user.service = service;
+  user.services = service;
+  await userRepository.save(user);
+  return user.toRedisJson();
+};
+
+export const addServiceToUser = async (id: string, service: string) => {
+  const userRepository = fetchUserRepository();
+  const user = await userRepository.fetch(id);
+  // @ts-ignore
+  if (!user.services) {
+    // @ts-ignore
+    user.services = [service];
+  } else {
+    // @ts-ignore
+    for (const item of user.services) {
+      if (item === service) {
+        throw new Error('Service already registered to this user.');
+      }
+    }
+    // @ts-ignore
+    user.services = [...user.services, service];
+  }
+  // @ts-ignore
+  user.services = user.services;
+  await userRepository.save(user);
+  return user.toRedisJson();
+};
+
+export const removeServiceFromUser = async (id: string, service: string) => {
+  const userRepository = fetchUserRepository();
+  const user = await userRepository.fetch(id);
+  // @ts-ignore
+  if (!user.services) {
+    // @ts-ignore
+    throw new Error('User has no services registered.');
+  } else {
+    // @ts-ignore
+    user.services = user.services.filter((item) => item !== service);
+  }
+  console.log(user.services);
+  await userRepository.save(user);
+  return user.toRedisJson();
+};
+
+export const deleteAllServicesFromUser = async (id: string) => {
+  const userRepository = fetchUserRepository();
+  const user = await userRepository.fetch(id);
+  // @ts-ignore
+  user.services = [];
   await userRepository.save(user);
   return user.toRedisJson();
 };
 
 export const deleteUser = async (id: string) => {
-  const userRepository = client.fetchRepository(userSchema);
+  const userRepository = fetchUserRepository();
   await userRepository.remove(id);
   return { Ok: true, status: 200, message: 'User deleted' };
 };
@@ -92,7 +139,7 @@ export const checkIfUserExistsByEmail = async (
 };
 
 export const updateUserPassword = async (id: string, newPassword: string) => {
-  const userRepository = client.fetchRepository(userSchema);
+  const userRepository = fetchUserRepository();
   const user = await userRepository.fetch(id);
   // @ts-ignore
   user.password = newPassword;

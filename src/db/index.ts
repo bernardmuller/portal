@@ -1,14 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
 import { Client, Entity, Schema, Repository } from 'redis-om';
 import { requireEnvVar } from '../utils';
-
-class User extends Entity {}
-export const userSchema = new Schema(User, {
-  id: { type: 'string' },
-  email: { type: 'string' },
-  password: { type: 'string' },
-  service: { type: 'string' },
-});
+import { userSchema } from './models/user';
 
 export const client = new Client();
 

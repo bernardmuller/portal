@@ -1,13 +1,15 @@
-import { client } from '../../db';
 import { Request, Response } from 'express';
 import { validateUserParams } from '../../utils';
 import {
+  addServiceToUser,
   checkIfUserExists,
   createUser,
+  deleteAllServicesFromUser,
   deleteUser,
   getUser,
   getUserByEmail,
   getUsers,
+  removeServiceFromUser,
   updateUser,
   updateUserService,
 } from './actions';
@@ -96,6 +98,81 @@ export const updateUserServiceHandler = async (req: Request, res: Response) => {
   validateUserParams(userParams);
 
   const updatedUser = await updateUserService(id, userParams.service);
+  res.send({
+    Ok: true,
+    status: 200,
+    data: updatedUser,
+  });
+};
+
+export const addServiceToUserHandler = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const existingUser = await checkIfUserExists(id);
+
+  if (!existingUser)
+    res.send({
+      Ok: false,
+      status: 401,
+      message: `User not found.`,
+    });
+
+  const userParams = {
+    service: req.body.service,
+  };
+
+  validateUserParams(userParams);
+
+  const updatedUser = await addServiceToUser(id, userParams.service);
+  res.send({
+    Ok: true,
+    status: 200,
+    data: updatedUser,
+  });
+};
+
+export const removeServicefromUserHandler = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+  const existingUser = await checkIfUserExists(id);
+
+  if (!existingUser)
+    res.send({
+      Ok: false,
+      status: 401,
+      message: `User not found.`,
+    });
+
+  const userParams = {
+    service: req.body.service,
+  };
+
+  validateUserParams(userParams);
+
+  const updatedUser = await removeServiceFromUser(id, userParams.service);
+  res.send({
+    Ok: true,
+    status: 200,
+    data: updatedUser,
+  });
+};
+
+export const deleteAllServicesfromUserHandler = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+  const existingUser = await checkIfUserExists(id);
+
+  if (!existingUser)
+    res.send({
+      Ok: false,
+      status: 401,
+      message: `User not found.`,
+    });
+
+  const updatedUser = await deleteAllServicesFromUser(id);
   res.send({
     Ok: true,
     status: 200,
