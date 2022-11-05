@@ -9,7 +9,9 @@ import {
   getUserByEmail,
   getUsers,
   updateUser,
+  updateUserService,
 } from './actions';
+import { User } from 'interfaces';
 
 export const getUsersHandler = async (req: Request, res: Response) => {
   const users = await getUsers();
@@ -41,13 +43,39 @@ export const createUserHandler = async (req: Request, res: Response) => {
     throw new Error('User Already exists');
   }
 
-  const newUser = await createUser(userParams);
+  const newUser = await createUser(userParams as User);
   res.send({
     Ok: true,
     status: 200,
     data: newUser,
   });
   return;
+};
+
+export const updateUserHandler = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const existingUser = await checkIfUserExists(id);
+
+  if (!existingUser)
+    res.send({
+      Ok: false,
+      status: 401,
+      message: `User not found.`,
+    });
+
+  const userParams = {
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+  };
+
+  validateUserParams(userParams);
+
+  const updatedUser = await updateUser(id, userParams);
+  res.send({
+    Ok: true,
+    status: 200,
+    data: updatedUser,
+  });
 };
 
 export const updateUserServiceHandler = async (req: Request, res: Response) => {
@@ -67,7 +95,7 @@ export const updateUserServiceHandler = async (req: Request, res: Response) => {
 
   validateUserParams(userParams);
 
-  const updatedUser = await updateUser(id, userParams);
+  const updatedUser = await updateUserService(id, userParams.service);
   res.send({
     Ok: true,
     status: 200,

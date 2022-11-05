@@ -1,17 +1,6 @@
 import { Response, Request } from 'express';
-import { UserModel } from '../../interfaces';
-import {
-  getUserByEmail,
-  getUserByUuid,
-  updateUser,
-  updateUserPassword,
-} from '../../resources/users/actions';
+import { sendEmail } from '../../resources/email/actions';
 import { forgotPassword, login, register, resetPassword } from './actions';
-import {
-  createForgotPasswordToken,
-  decodeJWTToken,
-  encryptPassword,
-} from './utils';
 
 export const registerHandler = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -30,6 +19,8 @@ export const loginHandler = async (req: Request, res: Response) => {
 export const forgotPasswordHandler = async (req: Request, res: Response) => {
   const { email } = req.body;
   const token = await forgotPassword(email);
+  // Add email here
+  // await sendEmail(email, token);
   res.send({ resetToken: token });
 };
 

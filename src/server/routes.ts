@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response, Router } from 'express';
+import { authenticateUser } from '../resources/auth/middleware';
 import endpoints from './endpoints';
 import { dbMiddleware } from './utils';
 
@@ -27,7 +28,7 @@ export const catchAsync = (
 };
 
 export const createEndpoint = (router: Router, endpoint: Endpoint) => {
-  let middleware = endpoint.authenticate ? [] : [];
+  let middleware = endpoint.authenticate ? [authenticateUser] : [];
   const routeMiddleware = middleware.map((ware) => catchAsync(ware));
   router[endpoint.method](
     endpoint.path,

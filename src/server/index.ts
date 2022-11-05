@@ -7,6 +7,7 @@ import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import { router } from './routes';
 import { errorHandler } from './errors';
+import { compareAsc, format } from 'date-fns';
 
 function createApp() {
   const app = express();
@@ -24,6 +25,7 @@ function createApp() {
 
   app.listen(PORT, () => {
     portCB();
+    console.log(`Server started at: ${format(new Date(), 'yyyy-MM-dd HH:mm')}`);
     connectToDatabase();
   });
 }

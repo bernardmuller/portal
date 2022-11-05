@@ -43,17 +43,32 @@ export const getUserByUuid = async (uuid: string) => {
     .where('id')
     .equals(uuid)
     .return.all();
-  console.log(user);
   if (!user[0]?.toRedisJson()) throw new Error(`No user found.`);
-  return user[0];
+  return user[0].toRedisJson();
 };
 
 // function throws error on request
-export const updateUser = async (id: string, data: any) => {
+export const updateUser = async (
+  id: string,
+  data: {
+    firstname: string;
+    lastname: string;
+  },
+) => {
   const userRepository = client.fetchRepository(userSchema);
   const user = await userRepository.fetch(id);
   // @ts-ignore
-  user.service = data.service;
+  user.firstname = data.firstname;
+  user.lastname = data.lastname;
+  await userRepository.save(user);
+  return user.toRedisJson();
+};
+
+export const updateUserService = async (id: string, service: string) => {
+  const userRepository = client.fetchRepository(userSchema);
+  const user = await userRepository.fetch(id);
+  // @ts-ignore
+  user.service = service;
   await userRepository.save(user);
   return user.toRedisJson();
 };

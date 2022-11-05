@@ -1,7 +1,10 @@
 [x] Write a proper error handler
 [ ] Replace all res.send() instances with error handler
-[ ] Register
-[ ] Login
-[ ] JWT
-[ ] bcrypt password hashing
-[ ] forgot password
+[x] Register
+[x] Login
+[x] JWT
+[x] bcrypt password hashing
+[x] forgot password
+[x] Authorizarion Middleware on protected routes
+[ ] Find a way to store what service a user is subscribed to
+[ ] Attach service to JWT token, decode in authorization middleware 
