@@ -6,5 +6,5 @@
 [x] bcrypt password hashing
 [x] forgot password
 [x] Authorizarion Middleware on protected routes
-[ ] Find a way to store what service a user is subscribed to
+[x] Find a way to store what service a user is subscribed to
 [ ] Attach service to JWT token, decode in authorization middleware 

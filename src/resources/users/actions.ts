@@ -106,7 +106,6 @@ export const removeServiceFromUser = async (id: string, service: string) => {
     // @ts-ignore
     user.services = user.services.filter((item) => item !== service);
   }
-  console.log(user.services);
   await userRepository.save(user);
   return user.toRedisJson();
 };
