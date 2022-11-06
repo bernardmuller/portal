@@ -7,4 +7,8 @@
 [x] forgot password
 [x] Authorizarion Middleware on protected routes
 [x] Find a way to store what service a user is subscribed to
-[ ] Attach service to JWT token, decode in authorization middleware 
+[x] Attach service to JWT token, decode in authorization middleware 
+[ ] serviceMiddleware
+    [ ] Check for service in req params and match with services in user object
+[ ] adminMiddleware
+    [ ] match user role with roles in auth.json

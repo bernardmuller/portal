@@ -9,12 +9,33 @@ export const authenticateUser = async (
 ) => {
   const headerToken = req.headers.authorization?.split(' ')[1];
   if (!headerToken) {
-    throw new Error('Not Allowed');
+    throw new Error('Not Allowed, no token found.');
   }
   const userId = await tradeTokenForUser(headerToken);
   const user = await getUserByUuid(userId);
   if (!user) {
-    throw new Error('Not Allowed 2');
+    throw new Error('Unauthorized');
   }
+  res.locals.user = user;
+  next();
+};
+
+export const serviceMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const user = res.locals.user;
+  console.log(user);
+  next();
+};
+
+export const adminMiddleware = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const user = res.locals.user;
+  console.log(user);
   next();
 };

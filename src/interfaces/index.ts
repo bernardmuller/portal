@@ -11,6 +11,7 @@ export const UserModel = z.object({
   email: z.string().email(),
   password: z.string(),
   services: z.string().array(),
+  role: z.number(),
 });
 
 export const ServiceModel = z.object({

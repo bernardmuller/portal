@@ -11,6 +11,7 @@ export const userSchema = new Schema(
     email: { type: 'string' },
     password: { type: 'string' },
     services: { type: 'string[]' },
+    role: { type: 'number' },
   },
   { dataStructure: 'JSON' },
 );

@@ -1,5 +1,8 @@
 import { NextFunction, Request, Response, Router } from 'express';
-import { authenticateUser } from '../resources/auth/middleware';
+import {
+  authenticateUser,
+  serviceMiddleware,
+} from '../resources/auth/middleware';
 import endpoints from './endpoints';
 import { dbMiddleware } from './utils';
 
@@ -17,6 +20,7 @@ type Endpoint = {
   path: string;
   handler: (req: Request, res: Response) => void;
   authenticate: boolean;
+  requiresAdmin: boolean;
 };
 
 export const catchAsync = (
@@ -28,12 +32,15 @@ export const catchAsync = (
 };
 
 export const createEndpoint = (router: Router, endpoint: Endpoint) => {
-  let middleware = endpoint.authenticate ? [authenticateUser] : [];
-  const routeMiddleware = middleware.map((ware) => catchAsync(ware));
+  let auth = endpoint.authenticate ? [authenticateUser, serviceMiddleware] : [];
+  let admin = endpoint.requiresAdmin ? [] : [];
+  const authMiddleware = auth.map((ware) => catchAsync(ware));
+  const adminMiddleware = admin.map((ware) => catchAsync(ware));
   router[endpoint.method](
     endpoint.path,
     dbMiddleware,
-    ...routeMiddleware,
+    ...authMiddleware,
+    ...adminMiddleware,
     catchAsync(endpoint.handler),
   );
 };
