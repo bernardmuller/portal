@@ -18,6 +18,7 @@ export const configureRedisDb = (req: Request, res: Response) => {
   return redisRepositoryConfig(res);
 };
 
+// bad: don't do this
 export const redisRepositoryConfig = (res: Response) => {
   const userRepository = client.fetchRepository(userSchema);
   return (res.locals.userRepository = userRepository);

@@ -1,3 +1,4 @@
+import { dbMiddleware } from '../db/middleware';
 import { NextFunction, Request, Response, Router } from 'express';
 import {
   adminMiddleware,
@@ -5,7 +6,6 @@ import {
   serviceMiddleware,
 } from '../resources/auth/middleware';
 import endpoints from './endpoints';
-import { dbMiddleware } from './utils';
 
 export const router = Router();
 

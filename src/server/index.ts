@@ -1,25 +1,22 @@
 import { PORT } from '../config';
-import express from 'express';
-import { initializeServices } from '../services';
-import { createProxyEndpoints, dbMiddleware, portCB } from './utils';
+import express, { NextFunction, Request, Response } from 'express';
+import { portCB } from './utils';
 import { connectToDatabase } from '../db';
 import helmet from 'helmet';
 import bodyParser from 'body-parser';
 import { router } from './routes';
 import { errorHandler } from './errors';
-import { compareAsc, format } from 'date-fns';
+import { format } from 'date-fns';
+import { configureProxyRoutes } from './proxyRoutes';
+
+export const app = express();
 
 function createApp() {
-  const app = express();
-
-  // todo: extract app config
   app.use(helmet());
   app.use(bodyParser.json());
 
-  // todo extract app route into generator
-
   app.use('/', router);
-  createProxyEndpoints(app, initializeServices());
+  configureProxyRoutes(app);
 
   app.use(errorHandler);
 
