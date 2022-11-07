@@ -3,8 +3,10 @@ import {
   createUserHandler,
   deleteAllServicesfromUserHandler,
   deleteUserHandler,
+  demoteAdminToUserHandler,
   getUserHandler,
   getUsersHandler,
+  promoteUserToAdminHandler,
   removeServicefromUserHandler,
   updateUserServiceHandler,
 } from './handlers';
@@ -15,7 +17,7 @@ const endpoints = [
     path: '/users',
     handler: getUsersHandler,
     authenticate: true,
-    requiresAdmin: false,
+    requiresAdmin: true,
   },
   {
     method: 'get',
@@ -65,6 +67,20 @@ const endpoints = [
     handler: deleteAllServicesfromUserHandler,
     authenticate: true,
     requiresAdmin: false,
+  },
+  {
+    method: 'put',
+    path: '/users/:id/promote',
+    handler: promoteUserToAdminHandler,
+    authenticate: true,
+    requiresAdmin: true,
+  },
+  {
+    method: 'put',
+    path: '/users/:id/demote',
+    handler: demoteAdminToUserHandler,
+    authenticate: true,
+    requiresAdmin: true,
   },
 ];
 

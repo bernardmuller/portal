@@ -36,6 +36,12 @@ export const adminMiddleware = async (
   next: NextFunction,
 ) => {
   const user = res.locals.user;
-  console.log(user);
+  console.log('---Admin Middleware---');
+  if (user.role === 1) {
+    console.log('Admin User requesting');
+  } else {
+    console.log('Normal User requesting');
+    throw new Error('Not Allowed');
+  }
   next();
 };

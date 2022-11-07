@@ -7,7 +7,11 @@ export const createUser = async (data: {
   password: string;
 }) => {
   const userRepository = fetchUserRepository();
-  const newUser = await userRepository.createAndSave(data);
+  const newUserData = {
+    ...data,
+    role: 0,
+  };
+  const newUser = await userRepository.createAndSave(newUserData);
   return newUser;
 };
 
@@ -59,6 +63,24 @@ export const updateUser = async (
   user.firstname = data.firstname;
   // @ts-ignore
   user.lastname = data.lastname;
+  await userRepository.save(user);
+  return user.toRedisJson();
+};
+
+export const promoteUserToAdmin = async (id: string) => {
+  const userRepository = fetchUserRepository();
+  const user = await userRepository.fetch(id);
+  // @ts-ignore
+  user.role = 1;
+  await userRepository.save(user);
+  return user.toRedisJson();
+};
+
+export const demoteAdminToUser = async (id: string) => {
+  const userRepository = fetchUserRepository();
+  const user = await userRepository.fetch(id);
+  // @ts-ignore
+  user.role = 0;
   await userRepository.save(user);
   return user.toRedisJson();
 };

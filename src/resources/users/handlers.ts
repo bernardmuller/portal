@@ -6,9 +6,11 @@ import {
   createUser,
   deleteAllServicesFromUser,
   deleteUser,
+  demoteAdminToUser,
   getUser,
   getUserByEmail,
   getUsers,
+  promoteUserToAdmin,
   removeServiceFromUser,
   updateUser,
   updateUserService,
@@ -177,6 +179,47 @@ export const deleteAllServicesfromUserHandler = async (
     Ok: true,
     status: 200,
     data: updatedUser,
+  });
+};
+
+export const promoteUserToAdminHandler = async (
+  req: Request,
+  res: Response,
+) => {
+  const { id } = req.params;
+  const existingUser = await checkIfUserExists(id);
+
+  if (!existingUser)
+    res.send({
+      Ok: false,
+      status: 401,
+      message: `User not found.`,
+    });
+
+  const promotedUser = await promoteUserToAdmin(id);
+  res.send({
+    Ok: true,
+    status: 200,
+    data: promotedUser,
+  });
+};
+
+export const demoteAdminToUserHandler = async (req: Request, res: Response) => {
+  const { id } = req.params;
+  const existingUser = await checkIfUserExists(id);
+
+  if (!existingUser)
+    res.send({
+      Ok: false,
+      status: 401,
+      message: `User not found.`,
+    });
+
+  const promotedUser = await demoteAdminToUser(id);
+  res.send({
+    Ok: true,
+    status: 200,
+    data: promotedUser,
   });
 };
 

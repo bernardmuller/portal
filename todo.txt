@@ -12,3 +12,5 @@
     [ ] Check for service in req params and match with services in user object
 [ ] adminMiddleware
     [ ] match user role with roles in auth.json
+[x] PromoteUser to Admin
+[x] Demote user to User
