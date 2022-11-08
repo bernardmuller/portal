@@ -16,6 +16,7 @@ import {
   updateUserService,
 } from './actions';
 import { User } from 'interfaces';
+import { NotFoundError } from '../../utils/errors';
 
 export const getUsersHandler = async (req: Request, res: Response) => {
   const users = await getUsers();
@@ -26,12 +27,7 @@ export const getUserHandler = async (req: Request, res: Response) => {
   const { id } = req.params;
   const existingUser = await checkIfUserExists(id);
   if (!existingUser) {
-    res.send({
-      Ok: true,
-      status: 200,
-      message: 'User not found',
-    });
-    return;
+    throw new NotFoundError('User not found.');
   }
   const user = await getUser(id);
   res.send(user);
@@ -53,19 +49,13 @@ export const createUserHandler = async (req: Request, res: Response) => {
     status: 200,
     data: newUser,
   });
-  return;
 };
 
 export const updateUserHandler = async (req: Request, res: Response) => {
   const { id } = req.params;
   const existingUser = await checkIfUserExists(id);
 
-  if (!existingUser)
-    res.send({
-      Ok: false,
-      status: 401,
-      message: `User not found.`,
-    });
+  if (!existingUser) throw new NotFoundError('User not found.');
 
   const userParams = {
     firstname: req.body.firstname,
@@ -86,12 +76,7 @@ export const updateUserServiceHandler = async (req: Request, res: Response) => {
   const { id } = req.params;
   const existingUser = await checkIfUserExists(id);
 
-  if (!existingUser)
-    res.send({
-      Ok: false,
-      status: 401,
-      message: `User not found.`,
-    });
+  if (!existingUser) throw new NotFoundError('User not found.');
 
   const userParams = {
     service: req.body.service,
@@ -111,12 +96,7 @@ export const addServiceToUserHandler = async (req: Request, res: Response) => {
   const { id } = req.params;
   const existingUser = await checkIfUserExists(id);
 
-  if (!existingUser)
-    res.send({
-      Ok: false,
-      status: 401,
-      message: `User not found.`,
-    });
+  if (!existingUser) throw new NotFoundError('User not found.');
 
   const userParams = {
     service: req.body.service,
@@ -139,12 +119,7 @@ export const removeServicefromUserHandler = async (
   const { id } = req.params;
   const existingUser = await checkIfUserExists(id);
 
-  if (!existingUser)
-    res.send({
-      Ok: false,
-      status: 401,
-      message: `User not found.`,
-    });
+  if (!existingUser) throw new NotFoundError('User not found.');
 
   const userParams = {
     service: req.body.service,
@@ -167,12 +142,7 @@ export const deleteAllServicesfromUserHandler = async (
   const { id } = req.params;
   const existingUser = await checkIfUserExists(id);
 
-  if (!existingUser)
-    res.send({
-      Ok: false,
-      status: 401,
-      message: `User not found.`,
-    });
+  if (!existingUser) throw new NotFoundError('User not found.');
 
   const updatedUser = await deleteAllServicesFromUser(id);
   res.send({
@@ -189,12 +159,7 @@ export const promoteUserToAdminHandler = async (
   const { id } = req.params;
   const existingUser = await checkIfUserExists(id);
 
-  if (!existingUser)
-    res.send({
-      Ok: false,
-      status: 401,
-      message: `User not found.`,
-    });
+  if (!existingUser) throw new NotFoundError('User not found.');
 
   const promotedUser = await promoteUserToAdmin(id);
   res.send({
@@ -208,12 +173,7 @@ export const demoteAdminToUserHandler = async (req: Request, res: Response) => {
   const { id } = req.params;
   const existingUser = await checkIfUserExists(id);
 
-  if (!existingUser)
-    res.send({
-      Ok: false,
-      status: 401,
-      message: `User not found.`,
-    });
+  if (!existingUser) throw new NotFoundError('User not found.');
 
   const promotedUser = await demoteAdminToUser(id);
   res.send({
@@ -227,14 +187,7 @@ export const deleteUserHandler = async (req: Request, res: Response) => {
   const { id } = req.params;
   const existingUser = await checkIfUserExists(id);
 
-  if (!existingUser) {
-    res.send({
-      Ok: false,
-      status: 401,
-      message: `User not found.`,
-    });
-    return;
-  }
+  if (!existingUser) throw new NotFoundError('User not found.');
 
   const deletedUser = await deleteUser(id);
   res.send(deletedUser);

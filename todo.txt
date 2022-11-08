@@ -1,5 +1,5 @@
 [x] Write a proper error handler
-[ ] Replace all res.send() instances with error handler
+[x] Replace all res.send() instances with error handler
 [x] Register
 [x] Login
 [x] JWT
@@ -8,9 +8,12 @@
 [x] Authorizarion Middleware on protected routes
 [x] Find a way to store what service a user is subscribed to
 [x] Attach service to JWT token, decode in authorization middleware 
-[ ] serviceMiddleware
-    [ ] Check for service in req params and match with services in user object
+[x] serviceMiddleware
+    [x] Check for service in req params and match with services in user object
 [x] adminMiddleware
     [x] match user role with roles in auth.json
 [x] PromoteUser to Admin
 [x] Demote user to User
+[ ] Restructure some logic
+    [ ] Write service request test - send req to each service to see if 200 response.
+[ ] Think about how registration and login from a service would work.
