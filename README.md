@@ -1,6 +1,6 @@
 # Portal
 
-This is the repository for the Portal reverse proxy that is registered as the official api layer for my domain ([bernardmuller.dev](https://bernardmuller.dev 'bernardmuller.dev')).
+This is the repository for the Portal reverse proxy that is registered as the official api layer for my domain ([bernardmuller.dev](https://www.bernardmuller.dev 'bernardmuller.dev')).
 
 Portal acts as a gateway to my apps/projects. When users send requests to my projects and apps, the requests will be processed by it and passed to the service. Portal has its own authentication layer that is connected to a [Redis](https://redis.io/) database. With this, I can store all my users in once centralised place.
 
